@@ -3,99 +3,98 @@ using DotNet8WebApi.ResultPattern.Models;
 using DotNet8WebApi.ResultPattern.Resources;
 using Microsoft.EntityFrameworkCore;
 
-namespace DotNet8WebApi.ResultPattern.Features.Blog
+namespace DotNet8WebApi.ResultPattern.Features.Blog;
+
+public class DA_Blog
 {
-    public class DA_Blog
+    private readonly AppDbContext _appDbContext;
+
+    public DA_Blog(AppDbContext appDbContext)
     {
-        private readonly AppDbContext _appDbContext;
+        _appDbContext = appDbContext;
+    }
 
-        public DA_Blog(AppDbContext appDbContext)
+    public async Task<Result<BlogListResponseModel>> GetBlogList()
+    {
+        try
         {
-            _appDbContext = appDbContext;
+            var dataLst = await _appDbContext.Blogs.OrderByDescending(x => x.BlogId).ToListAsync();
+            var lst = dataLst.Select(x => x.Change()).ToList();
+            var model = new BlogListResponseModel
+            {
+                Blogs = lst
+            };
+
+            return Result<BlogListResponseModel>.SuccessResult(model, MessageResource.Success);
         }
-
-        public async Task<Result<BlogListResponseModel>> GetBlogList()
+        catch (Exception ex)
         {
-            try
-            {
-                var dataLst = await _appDbContext.Blogs.OrderByDescending(x => x.BlogId).ToListAsync();
-                var lst = dataLst.Select(x => x.Change()).ToList();
-                var model = new BlogListResponseModel
-                {
-                    Blogs = lst
-                };
-
-                return Result<BlogListResponseModel>.SuccessResult(model, MessageResource.Success);
-            }
-            catch (Exception ex)
-            {
-                return Result<BlogListResponseModel>.FailureResult(ex);
-            }
+            return Result<BlogListResponseModel>.FailureResult(ex);
         }
+    }
 
-        public async Task<Result<BlogResponseModel>> CreateBlog(BlogRequestModel requestModel)
+    public async Task<Result<BlogResponseModel>> CreateBlog(BlogRequestModel requestModel)
+    {
+        try
         {
-            try
-            {
-                await _appDbContext.Blogs.AddAsync(requestModel.Change());
-                int result = await _appDbContext.SaveChangesAsync();
+            await _appDbContext.Blogs.AddAsync(requestModel.Change());
+            int result = await _appDbContext.SaveChangesAsync();
 
-                return result > 0 ? Result<BlogResponseModel>.SuccessResult(MessageResource.SaveSuccess)
-                    : Result<BlogResponseModel>.FailureResult(MessageResource.SaveFail);
-            }
-            catch (Exception ex)
-            {
-                return Result<BlogResponseModel>.FailureResult(ex);
-            }
+            return result > 0 ? Result<BlogResponseModel>.SuccessResult(MessageResource.SaveSuccess)
+                : Result<BlogResponseModel>.FailureResult(MessageResource.SaveFail);
         }
-
-        public async Task<Result<BlogResponseModel>> UpdateBlog(BlogRequestModel requestModel, int id)
+        catch (Exception ex)
         {
-            try
-            {
-                var item = await _appDbContext.Blogs.FirstOrDefaultAsync(x => x.BlogId == id);
-                if (item is null)
-                    return Result<BlogResponseModel>.FailureResult(MessageResource.NotFound);
-
-                if (!string.IsNullOrEmpty(requestModel.BlogTitle))
-                    item.BlogTitle = requestModel.BlogTitle;
-
-                if (!string.IsNullOrEmpty(requestModel.BlogAuthor))
-                    item.BlogAuthor = requestModel.BlogAuthor;
-
-                if (!string.IsNullOrEmpty(requestModel.BlogContent))
-                    item.BlogContent = requestModel.BlogContent;
-
-                _appDbContext.Blogs.Update(item);
-                int result = await _appDbContext.SaveChangesAsync();
-
-                return result > 0 ? Result<BlogResponseModel>.SuccessResult(MessageResource.UpdateSuccess)
-                    : Result<BlogResponseModel>.FailureResult(MessageResource.UpdateFail);
-            }
-            catch (Exception ex)
-            {
-                return Result<BlogResponseModel>.FailureResult(ex);
-            }
+            return Result<BlogResponseModel>.FailureResult(ex);
         }
+    }
 
-        public async Task<Result<BlogResponseModel>> DeleteBlog(int id)
+    public async Task<Result<BlogResponseModel>> UpdateBlog(BlogRequestModel requestModel, int id)
+    {
+        try
         {
-            try
-            {
-                var item = await _appDbContext.Blogs.FindAsync(id);
-                if (item is null)
-                    return Result<BlogResponseModel>.FailureResult(MessageResource.NotFound);
+            var item = await _appDbContext.Blogs.FirstOrDefaultAsync(x => x.BlogId == id);
+            if (item is null)
+                return Result<BlogResponseModel>.FailureResult(MessageResource.NotFound);
 
-                _appDbContext.Blogs.Remove(item);
-                int result = await _appDbContext.SaveChangesAsync();
+            if (!string.IsNullOrEmpty(requestModel.BlogTitle))
+                item.BlogTitle = requestModel.BlogTitle;
 
-                return result > 0 ? Result<BlogResponseModel>.SuccessResult(MessageResource.DeleteSuccess)
-                    : Result<BlogResponseModel>.FailureResult(MessageResource.DeleteFail);
-            }
-            catch (Exception ex)
-            {
-                return Result<BlogResponseModel>.FailureResult(ex);
-            }
+            if (!string.IsNullOrEmpty(requestModel.BlogAuthor))
+                item.BlogAuthor = requestModel.BlogAuthor;
+
+            if (!string.IsNullOrEmpty(requestModel.BlogContent))
+                item.BlogContent = requestModel.BlogContent;
+
+            _appDbContext.Blogs.Update(item);
+            int result = await _appDbContext.SaveChangesAsync();
+
+            return result > 0 ? Result<BlogResponseModel>.SuccessResult(MessageResource.UpdateSuccess)
+                : Result<BlogResponseModel>.FailureResult(MessageResource.UpdateFail);
+        }
+        catch (Exception ex)
+        {
+            return Result<BlogResponseModel>.FailureResult(ex);
+        }
+    }
+
+    public async Task<Result<BlogResponseModel>> DeleteBlog(int id)
+    {
+        try
+        {
+            var item = await _appDbContext.Blogs.FindAsync(id);
+            if (item is null)
+                return Result<BlogResponseModel>.FailureResult(MessageResource.NotFound);
+
+            _appDbContext.Blogs.Remove(item);
+            int result = await _appDbContext.SaveChangesAsync();
+
+            return result > 0 ? Result<BlogResponseModel>.SuccessResult(MessageResource.DeleteSuccess)
+                : Result<BlogResponseModel>.FailureResult(MessageResource.DeleteFail);
+        }
+        catch (Exception ex)
+        {
+            return Result<BlogResponseModel>.FailureResult(ex);
         }
     }
 }
