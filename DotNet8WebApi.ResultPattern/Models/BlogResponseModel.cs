@@ -1,6 +1,5 @@
-﻿namespace DotNet8WebApi.ResultPattern.Models
+﻿namespace DotNet8WebApi.ResultPattern.Models;
+
+public class BlogResponseModel
 {
-    public class BlogResponseModel
-    {
-    }
 }
