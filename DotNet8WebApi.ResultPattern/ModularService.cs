@@ -11,10 +11,11 @@ public static class ModularService
         WebApplicationBuilder builder
     )
     {
-        services.AddDbContextService(builder)
-        .AddJsonService()
-        .AddDataAccessServices()
-        .AddBusinessLogicServices();
+        services
+            .AddDbContextService(builder)
+            .AddJsonService()
+            .AddDataAccessServices()
+            .AddBusinessLogicServices();
 
         return services;
     }
