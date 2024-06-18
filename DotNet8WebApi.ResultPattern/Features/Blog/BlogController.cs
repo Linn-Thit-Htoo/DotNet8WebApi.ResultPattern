@@ -67,5 +67,20 @@ namespace DotNet8WebApi.ResultPattern.Features.Blog
                 return StatusCode(500, Result<BlogResponseModel>.FailureResult(ex));
             }
         }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteBlog(int id)
+        {
+            try
+            {
+                var result = await _bL_Blog.DeleteBlog(id);
+
+                return Ok(result);
+            }
+            catch (Exception ex)
+            {
+                return StatusCode(500, Result<BlogResponseModel>.FailureResult(ex));
+            }
+        }
     }
 }

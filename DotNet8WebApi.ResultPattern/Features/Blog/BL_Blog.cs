@@ -25,5 +25,15 @@ namespace DotNet8WebApi.ResultPattern.Features.Blog
         {
             return await _dA_Blog.UpdateBlog(requestModel, id);
         }
+
+        public async Task<Result<BlogResponseModel>> DeleteBlog(int id)
+        {
+            if (id <= 0)
+            {
+                return Result<BlogResponseModel>.FailureResult("Id is invalid.");
+            }
+
+            return await _dA_Blog.DeleteBlog(id);
+        }
     }
 }
