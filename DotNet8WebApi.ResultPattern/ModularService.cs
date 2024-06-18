@@ -6,7 +6,10 @@ namespace DotNet8WebApi.ResultPattern;
 
 public static class ModularService
 {
-    public static IServiceCollection AddFeatures(this IServiceCollection services, WebApplicationBuilder builder)
+    public static IServiceCollection AddFeatures(
+        this IServiceCollection services,
+        WebApplicationBuilder builder
+    )
     {
         services.AddDbContextService(builder);
         services.AddJsonService();
@@ -28,7 +31,10 @@ public static class ModularService
         return services;
     }
 
-    private static IServiceCollection AddDbContextService(this IServiceCollection services, WebApplicationBuilder builder)
+    private static IServiceCollection AddDbContextService(
+        this IServiceCollection services,
+        WebApplicationBuilder builder
+    )
     {
         builder.Services.AddDbContext<AppDbContext>(opt =>
         {
@@ -41,10 +47,12 @@ public static class ModularService
 
     private static IServiceCollection AddJsonService(this IServiceCollection services)
     {
-        services.AddControllers().AddJsonOptions(opt =>
-        {
-            opt.JsonSerializerOptions.PropertyNamingPolicy = null;
-        });
+        services
+            .AddControllers()
+            .AddJsonOptions(opt =>
+            {
+                opt.JsonSerializerOptions.PropertyNamingPolicy = null;
+            });
 
         return services;
     }
