@@ -15,5 +15,15 @@ namespace DotNet8WebApi.ResultPattern.Features.Blog
         {
             return await _dA_Blog.GetBlogList();
         }
+
+        public async Task<Result<BlogResponseModel>> CreateBlog(BlogRequestModel requestModel)
+        {
+            return await _dA_Blog.CreateBlog(requestModel);
+        }
+
+        public async Task<Result<BlogResponseModel>> UpdateBlog(BlogRequestModel requestModel, int id)
+        {
+            return await _dA_Blog.UpdateBlog(requestModel, id);
+        }
     }
 }

@@ -12,5 +12,15 @@
                 BlogContent = dataModel.BlogContent
             };
         }
+
+        public static Tbl_Blog Change(this BlogRequestModel requestModel)
+        {
+            return new Tbl_Blog
+            {
+                BlogTitle = requestModel.BlogTitle,
+                BlogAuthor = requestModel.BlogAuthor,
+                BlogContent = requestModel.BlogContent
+            };
+        }
     }
 }
