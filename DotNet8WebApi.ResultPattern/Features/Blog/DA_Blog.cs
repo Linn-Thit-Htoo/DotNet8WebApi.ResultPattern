@@ -20,10 +20,7 @@ public class DA_Blog
         {
             var dataLst = await _appDbContext.Blogs.OrderByDescending(x => x.BlogId).ToListAsync();
             var lst = dataLst.Select(x => x.Change()).ToList();
-            var model = new BlogListResponseModel
-            {
-                Blogs = lst
-            };
+            var model = new BlogListResponseModel { Blogs = lst };
 
             return Result<BlogListResponseModel>.SuccessResult(model, MessageResource.Success);
         }
@@ -40,7 +37,8 @@ public class DA_Blog
             await _appDbContext.Blogs.AddAsync(requestModel.Change());
             int result = await _appDbContext.SaveChangesAsync();
 
-            return result > 0 ? Result<BlogResponseModel>.SuccessResult(MessageResource.SaveSuccess)
+            return result > 0
+                ? Result<BlogResponseModel>.SuccessResult(MessageResource.SaveSuccess)
                 : Result<BlogResponseModel>.FailureResult(MessageResource.SaveFail);
         }
         catch (Exception ex)
@@ -69,7 +67,8 @@ public class DA_Blog
             _appDbContext.Blogs.Update(item);
             int result = await _appDbContext.SaveChangesAsync();
 
-            return result > 0 ? Result<BlogResponseModel>.SuccessResult(MessageResource.UpdateSuccess)
+            return result > 0
+                ? Result<BlogResponseModel>.SuccessResult(MessageResource.UpdateSuccess)
                 : Result<BlogResponseModel>.FailureResult(MessageResource.UpdateFail);
         }
         catch (Exception ex)
@@ -89,7 +88,8 @@ public class DA_Blog
             _appDbContext.Blogs.Remove(item);
             int result = await _appDbContext.SaveChangesAsync();
 
-            return result > 0 ? Result<BlogResponseModel>.SuccessResult(MessageResource.DeleteSuccess)
+            return result > 0
+                ? Result<BlogResponseModel>.SuccessResult(MessageResource.DeleteSuccess)
                 : Result<BlogResponseModel>.FailureResult(MessageResource.DeleteFail);
         }
         catch (Exception ex)
